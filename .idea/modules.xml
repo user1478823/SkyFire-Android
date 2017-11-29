@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SkyFireExample.iml" filepath="$PROJECT_DIR$/SkyFireExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/skyfire/skyfire.iml" filepath="$PROJECT_DIR$/skyfire/skyfire.iml" />
     </modules>
   </component>
 </project>
