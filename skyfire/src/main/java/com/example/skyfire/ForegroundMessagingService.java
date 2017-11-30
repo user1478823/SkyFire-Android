@@ -2,8 +2,10 @@ package com.example.skyfire;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -14,7 +16,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class ForegroundMessagingService extends FirebaseMessagingService {
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
@@ -30,18 +31,13 @@ public class ForegroundMessagingService extends FirebaseMessagingService {
                 message = remoteMessage.getData().get("message");
             }
 
-            Notification notification;
-
-            Notification.Builder builder = new Notification.Builder(this)
-                    .setContentTitle(title)
-                    .setContentText(message);
-
-
-            notification = builder.build();
-
-            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-            manager.notify(321, notification);
+            Intent intent = new Intent("com.example.skyfire_FCM-MESSAGE");
+            intent.putExtra("title", title);
+            intent.putExtra("message", message);
+            //with local br manager you make sure that your data is not
+            //available to other applications
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+            lbm.sendBroadcast(intent);
         }
 
     }
