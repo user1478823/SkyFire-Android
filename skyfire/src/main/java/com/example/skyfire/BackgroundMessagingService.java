@@ -10,7 +10,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  * Created by ttlnisoffice on 11/29/17.
  */
 
-public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
+public class BackgroundMessagingService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
