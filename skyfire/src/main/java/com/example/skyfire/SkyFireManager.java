@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 
 public class SkyFireManager {
 
-    Context c;
+    private Context c;
 
     public SkyFireManager(Context c) {
         this.c = c;

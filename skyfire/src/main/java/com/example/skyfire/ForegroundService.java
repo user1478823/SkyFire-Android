@@ -17,13 +17,17 @@ public class ForegroundService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         //check if there is any data available in firebase message
-        String title = "Default title";
+        String remoteTitle = remoteMessage.getNotification().getTitle();
         String savedTitle = new SkyFireManager(this).getMessageTitle();
-        if (savedTitle != null) {
-            title = savedTitle;
+        String title = "Default title";
+        if (remoteTitle != null) {
+            title = remoteTitle;
+        } else {
+            if (savedTitle != null) {
+                title = savedTitle;
+            }
         }
-
-
+        
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(android.R.drawable.arrow_up_float)
                 .setContentTitle(title)
