@@ -2,13 +2,13 @@
     package="com.example.skyfire" >
     <application>
         <service
-            android:name=".BackgroundMessagingService">
+            android:name=".BackgroundService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".ForegroundMessagingService">
+            android:name=".ForegroundService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
