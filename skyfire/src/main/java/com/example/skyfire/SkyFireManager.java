@@ -1,7 +1,6 @@
 package com.example.skyfire;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 /**
@@ -21,16 +20,8 @@ public class SkyFireManager {
         return this;
     }
 
-    public String getMessageTitle() {
-        return PreferenceManager.getDefaultSharedPreferences(c).getString("MsgTitle", null);
-    }
-
     public SkyFireManager setMessageIcon(int icon) {
         PreferenceManager.getDefaultSharedPreferences(c).edit().putInt("MsgIcon", icon).apply();
         return this;
-    }
-
-    public int getMessageIcon() {
-        return PreferenceManager.getDefaultSharedPreferences(c).getInt("MsgIcon", 404);
     }
 }

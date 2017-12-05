@@ -2,6 +2,7 @@ package com.example.skyfire;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -16,13 +17,11 @@ public class ForegroundService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        String title = getTitle(remoteMessage);
-        int icon = getIcon();
-
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(icon)
-                .setContentTitle(title)
-                .setContentText(remoteMessage.getNotification().getBody());
+                .setSmallIcon(getIcon())
+                .setContentTitle(getTitle(remoteMessage))
+                .setContentText(remoteMessage.getNotification().getBody())
+                .setAutoCancel(getAutoCancel());
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -34,24 +33,23 @@ public class ForegroundService extends FirebaseMessagingService {
 
     private String getTitle(RemoteMessage remoteMessage) {
         String remoteTitle = remoteMessage.getNotification().getTitle();
-        String savedTitle = new SkyFireManager(this).getMessageTitle();
-        String title = "Default title";
+        String savedTitle = PreferenceManager.getDefaultSharedPreferences(this)
+                                             .getString("MsgTitle", "Default title");
+
         if (remoteTitle != null) {
-            title = remoteTitle;
-        } else {
-            if (savedTitle != null) {
-                title = savedTitle;
-            }
+            savedTitle = remoteTitle;
         }
 
-        return title;
+        return savedTitle;
     }
 
     private int getIcon() {
-        int icon = new SkyFireManager(this).getMessageIcon();
-        if (icon == 404) {
-            icon = android.R.drawable.btn_plus;
-        }
-        return icon;
+        return PreferenceManager.getDefaultSharedPreferences(this)
+                                .getInt("MsgIcon", android.R.drawable.ic_dialog_info);
+    }
+
+    private boolean getAutoCancel() {
+        return PreferenceManager.getDefaultSharedPreferences(this)
+                                .getBoolean("MsgAutoCancel", true);
     }
 }
