@@ -33,8 +33,9 @@ public class ForegroundService extends FirebaseMessagingService {
 
     private String getTitle(RemoteMessage remoteMessage) {
         String remoteTitle = remoteMessage.getNotification().getTitle();
-        String savedTitle = PreferenceManager.getDefaultSharedPreferences(this)
-                                             .getString("MsgTitle", "Default title");
+        String savedTitle  = PreferenceManager.getDefaultSharedPreferences(this)
+                                              .getString("MsgTitle", getApplicationInfo().loadLabel(getPackageManager()).toString());
+
 
         if (remoteTitle != null) {
             savedTitle = remoteTitle;
@@ -45,7 +46,7 @@ public class ForegroundService extends FirebaseMessagingService {
 
     private int getIcon() {
         return PreferenceManager.getDefaultSharedPreferences(this)
-                                .getInt("MsgIcon", android.R.drawable.ic_dialog_info);
+                                .getInt("MsgIcon", getApplicationInfo().icon);
     }
 
     private boolean getAutoCancel() {
