@@ -20,7 +20,7 @@ public class ForegroundService extends FirebaseMessagingService {
         int icon = getIcon();
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(android.R.drawable.arrow_up_float)
+                .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText(remoteMessage.getNotification().getBody());
 

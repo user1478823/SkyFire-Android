@@ -16,16 +16,18 @@ public class SkyFireManager {
         this.c = c;
     }
 
-    public void setMessageTitle(String title) {
+    public SkyFireManager setMessageTitle(String title) {
         PreferenceManager.getDefaultSharedPreferences(c).edit().putString("MsgTitle", title).apply();
+        return this;
     }
 
     public String getMessageTitle() {
         return PreferenceManager.getDefaultSharedPreferences(c).getString("MsgTitle", null);
     }
 
-    public void setMessageIcon(int icon) {
+    public SkyFireManager setMessageIcon(int icon) {
         PreferenceManager.getDefaultSharedPreferences(c).edit().putInt("MsgIcon", icon).apply();
+        return this;
     }
 
     public int getMessageIcon() {
