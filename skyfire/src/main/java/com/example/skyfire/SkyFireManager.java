@@ -24,4 +24,11 @@ public class SkyFireManager {
         return PreferenceManager.getDefaultSharedPreferences(c).getString("MsgTitle", null);
     }
 
+    public void setMessageIcon(int icon) {
+        PreferenceManager.getDefaultSharedPreferences(c).edit().putInt("MsgIcon", icon).apply();
+    }
+
+    public int getMessageIcon() {
+        return PreferenceManager.getDefaultSharedPreferences(c).getInt("MsgIcon", 404);
+    }
 }

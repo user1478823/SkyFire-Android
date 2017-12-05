@@ -16,18 +16,9 @@ public class ForegroundService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        //check if there is any data available in firebase message
-        String remoteTitle = remoteMessage.getNotification().getTitle();
-        String savedTitle = new SkyFireManager(this).getMessageTitle();
-        String title = "Default title";
-        if (remoteTitle != null) {
-            title = remoteTitle;
-        } else {
-            if (savedTitle != null) {
-                title = savedTitle;
-            }
-        }
-        
+        String title = getTitle(remoteMessage);
+        int icon = getIcon();
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(android.R.drawable.arrow_up_float)
                 .setContentTitle(title)
@@ -39,5 +30,28 @@ public class ForegroundService extends FirebaseMessagingService {
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
 
+    }
+
+    private String getTitle(RemoteMessage remoteMessage) {
+        String remoteTitle = remoteMessage.getNotification().getTitle();
+        String savedTitle = new SkyFireManager(this).getMessageTitle();
+        String title = "Default title";
+        if (remoteTitle != null) {
+            title = remoteTitle;
+        } else {
+            if (savedTitle != null) {
+                title = savedTitle;
+            }
+        }
+
+        return title;
+    }
+
+    private int getIcon() {
+        int icon = new SkyFireManager(this).getMessageIcon();
+        if (icon == 404) {
+            icon = android.R.drawable.btn_plus;
+        }
+        return icon;
     }
 }
