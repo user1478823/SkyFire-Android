@@ -24,4 +24,9 @@ public class SkyFireManager {
         PreferenceManager.getDefaultSharedPreferences(c).edit().putInt("MsgIcon", icon).apply();
         return this;
     }
+
+    public SkyFireManager setAutoCancel(boolean b) {
+        PreferenceManager.getDefaultSharedPreferences(c).edit().putBoolean("MsgAutoCancel", b).apply();
+        return this;
+    }
 }

@@ -2,6 +2,9 @@ package com.example.skyfire;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
@@ -14,14 +17,28 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class ForegroundService extends FirebaseMessagingService {
 
+    private SharedPreferences pref;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String title   = (remoteMessage.getNotification().getTitle()  == null) ? getSavedTitle()   : remoteMessage.getNotification().getTitle();
+        String message = (remoteMessage.getNotification().getBody()   == null) ? "Default message" : remoteMessage.getNotification().getBody();
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(getIcon())
-                .setContentTitle(getTitle(remoteMessage))
-                .setContentText(remoteMessage.getNotification().getBody())
-                .setAutoCancel(getAutoCancel());
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(shouldAutoCancel());
+
+        shouldPlaySound(notificationBuilder);
+
+        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+        bigText.bigText(message);
+        bigText.setSummaryText(title);
+        notificationBuilder.setStyle(bigText);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -31,26 +48,25 @@ public class ForegroundService extends FirebaseMessagingService {
 
     }
 
-    private String getTitle(RemoteMessage remoteMessage) {
-        String remoteTitle = remoteMessage.getNotification().getTitle();
-        String savedTitle  = PreferenceManager.getDefaultSharedPreferences(this)
-                                              .getString("MsgTitle", getApplicationInfo().loadLabel(getPackageManager()).toString());
-
-
-        if (remoteTitle != null) {
-            savedTitle = remoteTitle;
-        }
-
-        return savedTitle;
-    }
-
     private int getIcon() {
-        return PreferenceManager.getDefaultSharedPreferences(this)
-                                .getInt("MsgIcon", getApplicationInfo().icon);
+        return pref.getInt("MsgIcon", getApplicationInfo().icon);
     }
 
-    private boolean getAutoCancel() {
-        return PreferenceManager.getDefaultSharedPreferences(this)
-                                .getBoolean("MsgAutoCancel", true);
+    // if you don't set the title with SkyFireManager.setMessageTitle(), Application name will be
+    // set as message title
+    private String getSavedTitle() {
+        String appName    = getApplicationInfo().loadLabel(getPackageManager()).toString();
+        return pref.getString("MsgTitle", appName);
+    }
+
+    private boolean shouldAutoCancel() {
+        return pref.getBoolean("MsgAutoCancel", true);
+    }
+
+    private void shouldPlaySound(NotificationCompat.Builder notificationBuilder) {
+        if (pref.getBoolean("MsgShouldPlaySound", true)) {
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            notificationBuilder.setSound(defaultSoundUri);
+        }
     }
 }
